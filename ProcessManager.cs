@@ -49,6 +49,7 @@ namespace CaptureManager
 
         public static void setProcessShow(Process p)
         {
+            if (p == null) return;
             //Process가 최소화 된 경우 복원 후 리턴함
             if (IsIconic(p.MainWindowHandle) != 0)
                 ShowWindow(p.MainWindowHandle, SW_RESTORE);

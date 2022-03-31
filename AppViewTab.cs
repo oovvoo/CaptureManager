@@ -45,6 +45,10 @@ namespace CaptureManager
             timer.Interval =1000;
             timer.Tick += (s, e) =>
             {
+
+                if(this.process == null)
+                    this.process = ProcessManager.getProcessByName(targetProcessName);
+
                 ProcessManager.setProcessShow(process);
                 Bitmap capturedImage = captureProcess.GetBitmap(process);
                 if (capturedImage != null)

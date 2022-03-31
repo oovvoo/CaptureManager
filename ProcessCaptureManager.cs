@@ -70,8 +70,11 @@ namespace CaptureManager
      
         public Bitmap GetBitmap(Process p)
         {
+            if (p == null) return null;
+
             try
             {
+                
                 IntPtr handle = p.MainWindowHandle;
 
                 IntPtr hRgn = CreateRectRgn(0, 0, 0, 0);

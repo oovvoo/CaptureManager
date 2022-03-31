@@ -33,8 +33,8 @@ namespace CaptureManager
           
             tabControl1.TabPages.Add(wTab);
 
-            AppViewTab aTab = new AppViewTab("CSCfms");
-            tabControl1.TabPages.Add(aTab);
+            //AppViewTab aTab = new AppViewTab("CSCfms");
+            //tabControl1.TabPages.Add(aTab);
 
             AppViewTab aTab2 = new AppViewTab("notepad");
             tabControl1.TabPages.Add(aTab2);
