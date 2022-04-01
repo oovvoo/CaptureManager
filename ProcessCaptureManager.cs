@@ -62,7 +62,7 @@ namespace CaptureManager
             public int right;
             public int bottom;
         }
-        private static Control mControl;
+        private Control mControl;
         public ProcessCaptureManager(Control f)
         {
             mControl = f;            
@@ -109,7 +109,7 @@ namespace CaptureManager
                 return bmp;
             }catch(Exception e)
             {
-                Console.WriteLine(e.StackTrace);
+                Console.WriteLine("GetBitmap(Process p):" + e.StackTrace);
             }
             return null;
         }

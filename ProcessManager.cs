@@ -25,7 +25,7 @@ namespace CaptureManager
         {
             try
             {
-                return Process.GetProcesses().Where(pr => pr.MainWindowHandle != IntPtr.Zero).ToArray();
+                return Process.GetProcesses().Where(pr => pr.MainWindowHandle != IntPtr.Zero).ToArray(); 
             }
             catch
             {
@@ -37,7 +37,7 @@ namespace CaptureManager
         {
             try{
 
-                Process proc = getWindowProcesses().Where(p => p.ProcessName.ToLower().Contains(name.ToLower())).First();
+                Process proc = getWindowProcesses().Where(p => p.ProcessName.ToLower().Contains(name.ToLower())).FirstOrDefault();
                 setProcessShow(proc);
                 return proc;
             }catch

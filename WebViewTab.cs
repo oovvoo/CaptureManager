@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace CaptureManager
 {
-    public class WebViewTab : TabPage
+    public class WebViewTab : TabPage,IDisposable
     {
         private WebBrowser webBrowser;
         private string url;
@@ -25,7 +25,7 @@ namespace CaptureManager
             this.Controls.Add(webBrowser);
             captureProcess = new ProcessCaptureManager(this);
             startCapture();
-
+    
         }
 
         public WebViewTab(string url,string name)
@@ -39,21 +39,38 @@ namespace CaptureManager
             this.Controls.Add(webBrowser);
             captureProcess = new ProcessCaptureManager(this);
             startCapture();
+               
 
         }
 
         public void startCapture()
         {
+
+          
             timer = new Timer();
-            timer.Interval = 1000;
+            timer.Interval = MainForm.CAPTURE_INTERVAL;
             timer.Tick += (s, e) =>
             {
 
                 Bitmap bitmap = captureProcess.GetBitmap(this);
-                bitmap.Save(@"d:\test.bmp");
+                
+
+                bitmap.Save(@".\"+ webBrowser.Url.Host + ".bmp");
                 bitmap.Dispose();
             };
             timer.Start();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Enabled = false;
+                timer.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
     }

@@ -2,47 +2,75 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Runtime.InteropServices;
+
 namespace CaptureManager
 {
     public partial class MainForm : Form
     {
+        public const int CAPTURE_INTERVAL = 1000;
         public MainForm()
         {
             InitializeComponent();
-
-            foreach(Process p in ProcessManager.getWindowProcesses())
+            mainTabControl.ControlRemoved += (o, e) =>
             {
-                Console.WriteLine(p.ProcessName +" "+ p.MainWindowTitle);
-                try
-                {
-                    Icon icon = Icon.ExtractAssociatedIcon(p.MainModule.FileName);
-                }
-                catch
-                {
-
-                }
-            }
-
+                //TabPage에서 타이머들이 돌고있음으로, Dispose 시에 Timer 리소스를 해제 해 준다.
+                TabPage page = e.Control as TabPage;
+                page.Dispose();
+            };
+                       
         }
 
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //TODO: 웹브라우저 내용도 스크린샷 할것
-            WebViewTab wTab = new WebViewTab("http://www.naver.com");
-          
-            tabControl1.TabPages.Add(wTab);
+            //로딩 후, 저장된 프로세스들을 모두 찾아서 로딩
+        }
 
-            //AppViewTab aTab = new AppViewTab("CSCfms");
-            //tabControl1.TabPages.Add(aTab);
+        private void btnTabAdd_Click(object sender, EventArgs e)
+        {
+           
 
-            AppViewTab aTab2 = new AppViewTab("notepad");
-            tabControl1.TabPages.Add(aTab2);
+            SelectType type = new SelectType();            
+            type.ShowDialog();
+            
+            if (type.DialogResult != DialogResult.OK)
+                return;
+              
+            if(type.type == SelectType.ADD_TYPE.APP)
+            {
+                AppAddSetup setup = new AppAddSetup();
+                setup.ShowDialog();
 
-            AppViewTab aTab3 = new AppViewTab("KakaoTalk");
-            tabControl1.TabPages.Add(aTab3);
+                if(setup.DialogResult == DialogResult.OK)
+                {
+                    AppViewTab tab = new AppViewTab(setup.selectedProcess);
+                    mainTabControl.TabPages.Add(tab);
+                    mainTabControl.SelectedTab = tab;
+                }
 
+            }
+            else
+            {
+                WebAddSetup setup = new WebAddSetup();
+                setup.ShowDialog();
+
+                if (setup.DialogResult == DialogResult.OK)
+                {
+                    WebViewTab tab = new WebViewTab(setup.url);
+                    mainTabControl.TabPages.Add(tab);
+                    mainTabControl.SelectedTab = tab;
+                }
+
+            }
+                  
+        }     
+        private void btnTabRemove_Click(object sender, EventArgs e)
+        {
+            if(mainTabControl.SelectedTab != null)
+                mainTabControl.TabPages.Remove(mainTabControl.SelectedTab);
 
         }
+
     }
 }
